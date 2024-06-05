@@ -1,4 +1,12 @@
+import 'package:doctor_booking_system/packages/models/lib/models.dart';
+import 'package:doctor_booking_system/shared/widgets/list_titiles/doctor_list_title.dart';
+import 'package:doctor_booking_system/shared/widgets/title/avatars/circle_avatar_with_text_label.dart';
+import 'package:doctor_booking_system/shared/widgets/title/cards/appointment_preview_card.dart';
+import 'package:doctor_booking_system/shared/widgets/title/section_title.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
+import '../shared/widgets/bottom_nav_bar/main_nav_bar.dart';
 
 class HomeScreens extends StatefulWidget {
   const HomeScreens({super.key});
@@ -81,16 +89,114 @@ class _HomeScreensState extends State<HomeScreens> {
           ),
         ),
       ),
-      body: const SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              // _DoctorCategories();
-            ],
+      body: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                _DoctorCategories(),
+                SizedBox(
+                  height: 16,
+                ),
+                _MySchedule(),
+                SizedBox(
+                  height: 16,
+                ),
+                _NearbyDoctors(),
+                SizedBox(
+                  height: 16,
+                ),
+              ],
+            ),
           ),
         ),
       ),
+      bottomNavigationBar: const MainNavBar(),
+    );
+  }
+}
+
+class _NearbyDoctors extends StatelessWidget {
+  const _NearbyDoctors({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final ColorScheme = Theme.of(context).colorScheme;
+    return Column(
+      children: [
+        SectionTitle(
+          title: 'Nearby Doctors',
+          action: 'See all',
+          onPressed: () {},
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              final doctor = Doctor.sampleDoctors[index];
+              return DoctorListTitle(doctor: doctor);
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                height: 24.0,
+                color: ColorScheme.surfaceContainerHighest,
+              );
+            },
+            itemCount: Doctor.sampleDoctors.length)
+      ],
+    );
+  }
+}
+
+class _MySchedule extends StatelessWidget {
+  const _MySchedule({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SectionTitle(
+          title: 'My Schedule',
+          action: 'See all',
+          onPressed: () {},
+        ),
+        const AppointmentPreviewCard(),
+      ],
+    );
+  }
+}
+
+class _DoctorCategories extends StatelessWidget {
+  const _DoctorCategories({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SectionTitle(
+          title: 'Categories',
+          action: 'See all',
+          onPressed: () {},
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: DoctorCategory.values
+              .take(5)
+              .map((Category) => Expanded(
+                    child: CircleAvatarWithTextLabel(
+                        icon: Category.icon, label: Category.name),
+                  ))
+              .toList(),
+        ),
+
+        //icons
+      ],
     );
   }
 }
